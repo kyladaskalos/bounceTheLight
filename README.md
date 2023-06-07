@@ -25,6 +25,7 @@ LED: Simulate ball moving back and forth, as well as the "bounce zone"
 Serial Monitor: Prints score, and win/loss
 
 IF TIME ALLOWS:
+
 Button A: Starts the game when pressed
 
 Speaker: Sounds when ball is hit
