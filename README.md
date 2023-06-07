@@ -17,10 +17,14 @@ This will be a pong style game. The objective is to bounce the led light back an
 ## Inputs and Outputs
 
 Button B: Switches direction of LED
+
 Switch: Changes from easy to hard mode
+
 LED: Simulate ball moving back and forth, as well as the "bounce zone"
+
 Serial Monitor: Prints score, and win/loss
 
 IF TIME ALLOWS:
 Button A: Starts the game when pressed
+
 Speaker: Sounds when ball is hit
