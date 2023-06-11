@@ -1,5 +1,4 @@
 #include <Adafruit_CircuitPlayground.h>
-#include <AsyncDelay.h>
 
 int buttonPlay = 5;
 volatile bool buttonFlag = 0;
@@ -17,6 +16,7 @@ bool gameLoss = 0;
 int roundCounter = 0;
 bool hardMode = 0;
 int ballSpeed = 0;
+bool playSparkle = 0;
 
 void setup() {
   CircuitPlayground.begin();
@@ -192,8 +192,13 @@ void loop() {
     if(gameWin == 1){ // prints win if 13 points
       Serial.println("You win!");
       startFlag = 0;
+      playSparkle = 1;
       break;
     }
+  }
+
+  if(playSparkle == 1){
+    victoryFlash();
   }
 }
 
@@ -257,6 +262,50 @@ void finalRound(){
   roundCounter = 4;
 }
 
+void victoryFlash(){ // plays upon victory
+  int randNum = random(10);
+  delay(300);
 
-
+  if(randNum == 0){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 255, 0, 0);
+    }
+  } else if(randNum == 1){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 0, 255, 0);
+    }
+  } else if(randNum == 2){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 0, 0, 255);
+    }
+  } else if(randNum == 3){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 128, 0, 128);
+    }
+  } else if(randNum == 4){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 255, 165, 0);
+    }
+  } else if(randNum == 5){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 255, 0, 255);
+    }
+  } else if(randNum == 6){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 255, 192, 203);
+    }
+  } else if(randNum == 7){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 128, 0, 128);
+    }
+  } else if(randNum == 8){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 0, 128, 128);
+    }
+  } else if(randNum == 9){
+    for(int i = 0; i < 10; i++){
+      CircuitPlayground.setPixelColor(i, 0, 255, 255);
+    }
+  }
+}
 
