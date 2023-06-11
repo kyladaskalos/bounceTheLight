@@ -3,6 +3,11 @@
 
 int buttonPlay = 5;
 volatile bool buttonFlag = 0;
+int buttonStart = 4;
+volatile bool startFlag = 0;
+int switchPin = 7;
+volatile bool switchFlag = 0;
+int switchState = 0;
 int switcher = 0;
 int ledTracker = 0;
 int totalPoints = 0;
@@ -10,165 +15,198 @@ bool continueGame = 1;
 bool gameWin = 0;
 bool gameLoss = 0;
 int roundCounter = 0;
+bool hardMode = 0;
+int ballSpeed = 0;
 
 void setup() {
   CircuitPlayground.begin();
   Serial.begin(9600);
   attachInterrupt(digitalPinToInterrupt(buttonPlay), ButtonBISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(buttonStart), StartISR, FALLING);
+  attachInterrupt(digitalPinToInterrupt(switchPin), SwitchISR, CHANGE);
 }
 
 void loop() {
 
-  //Detemine the 'bounce zone'
-  if(totalPoints < 4){
-    roundOne();
-  } else if(totalPoints > 3 && totalPoints < 6){
-    roundTwo();
-  } else if(totalPoints > 5 && totalPoints < 9){
-    roundThree();
-  } else if(totalPoints > 8 && totalPoints < 14){
-    finalRound();
+  if(switchFlag == 1){ //dertimines  and prints mode
+    switchState = digitalRead(switchPin);
+
+    if(switchState == 0){
+      hardMode = 0;
+      ballSpeed = 300;
+      Serial.println("Easy Mode");
+    } else if(switchState == 1){
+      hardMode = 1;
+      ballSpeed = 200;
+      Serial.println("Hard Mode");
+    }
+
+    switchFlag = 0;
   }
 
-  while(switcher % 2 == 0 && continueGame == 1){
-    for(ledTracker; ledTracker < 10; ledTracker++){ // iterates through, adding 1 to ledTracker each time
-      if(totalPoints < 4){
-        roundOne();
-      }else if(totalPoints > 3 && totalPoints < 6){
-        roundTwo();
-      }else if(totalPoints > 5 && totalPoints < 9){
-        roundThree();
-      }else if(totalPoints > 8 && totalPoints < 14){
-        finalRound();
-      }
+  while(startFlag == 1){
 
-      CircuitPlayground.setPixelColor(ledTracker, 255, 255, 255);
-      delay(300);
-      CircuitPlayground.setPixelColor(ledTracker, 0, 0, 0);
-      delay(300);
-
-      if(buttonFlag == 1){ // checking to see if bounced
-        if(roundCounter == 1){ // checks when button is pressed and adds point if bounced in the correct zone
-          if(ledTracker == 1 || ledTracker == 2 || ledTracker == 3 || ledTracker == 4){
-            totalPoints++;
-            Serial.print("Points: ");
-            Serial.println(totalPoints);
-          }
-        } else if(roundCounter == 2){
-          if(ledTracker == 2 || ledTracker == 3 || ledTracker == 4){
-            totalPoints++;
-            Serial.print("Points: ");
-            Serial.println(totalPoints);
-          }
-        } else if(roundCounter == 3){
-          if(ledTracker == 3 || ledTracker == 4){
-            totalPoints++;
-            Serial.print("Points: ");
-            Serial.println(totalPoints);
-          }
-        } else if(roundCounter == 4){
-          if(ledTracker == 4){
-            totalPoints++;
-            Serial.print("Points: ");
-            Serial.println(totalPoints);
-          }
-        }
-        ledTracker--;
-        switcher++;
-        buttonFlag = 0;
-        break;
-      }
-      if(ledTracker == 9){ // circles around
-        ledTracker = -1;
-      }
-      if(totalPoints == 13){ // checks for win
-        gameWin = 1;
-        continueGame = 0;
-        break;
-      }
-      if(ledTracker == 4){ // check for loss
-        gameLoss = 1;
-        continueGame = 0;
-        break;
-      }
+    //Detemine the 'bounce zone'
+    if(totalPoints < 4){
+      roundOne();
+    } else if(totalPoints > 3 && totalPoints < 6){
+      roundTwo();
+    } else if(totalPoints > 5 && totalPoints < 9){
+      roundThree();
+    } else if(totalPoints > 8 && totalPoints < 14){
+      finalRound();
     }
-  } 
-  while(switcher % 2 != 0 && continueGame == 1){
-    for(ledTracker; ledTracker > -1; ledTracker--){ // iterates through, subtracting 1 from ledTracker
-      if(totalPoints < 4){
-        roundOne();
-      }else if(totalPoints > 3 && totalPoints < 6){
-        roundTwo();
-      }else if(totalPoints > 5 && totalPoints < 9){
-        roundThree();
-      }else if(totalPoints > 8 && totalPoints < 14){
-        finalRound();
-      }
 
-      CircuitPlayground.setPixelColor(ledTracker, 255, 255, 255);
-      delay(300);
-      CircuitPlayground.setPixelColor(ledTracker, 0, 0, 0);
-      delay(300);
-
-      if(buttonFlag == 1){ //check if bounced
-        if(roundCounter == 1){ // checks when button is pressed and adds point if bounced in the correct zone
-          if(ledTracker == 8 || ledTracker == 7 || ledTracker == 6 || ledTracker == 5){
-            totalPoints++;
-            Serial.print("Points: ");
-            Serial.println(totalPoints);
-          }
-        } else if(roundCounter == 2){
-          if(ledTracker == 7 || ledTracker == 6 || ledTracker == 5){
-            totalPoints++;
-            Serial.print("Points: ");
-            Serial.println(totalPoints);
-          }
-        } else if(roundCounter == 3){
-          if(ledTracker == 6 || ledTracker == 5){
-            totalPoints++;
-            Serial.print("Points: ");
-            Serial.println(totalPoints);
-          }
-        } else if(roundCounter == 4){
-          if(ledTracker == 5){
-            totalPoints++;
-            Serial.print("Points: ");
-            Serial.println(totalPoints);
-          }
+    while(switcher % 2 == 0 && continueGame == 1){
+      for(ledTracker; ledTracker < 10; ledTracker++){ // iterates through, adding 1 to ledTracker each time
+        if(totalPoints < 4){
+          roundOne();
+        }else if(totalPoints > 3 && totalPoints < 6){
+          roundTwo();
+        }else if(totalPoints > 5 && totalPoints < 9){
+          roundThree();
+        }else if(totalPoints > 8 && totalPoints < 14){
+          finalRound();
         }
-        ledTracker++;
-        switcher++;
-        buttonFlag = 0;
-        break;
-      }
-      if(ledTracker == 0){ // circles around
-        ledTracker = 10;
-      }
-      if(totalPoints == 13){ //checks for win
-        gameWin = 1;
-        continueGame = 0;
-        break;
-      }
-      if(ledTracker == 5){ // check for loss
-        gameLoss = 1;
-        continueGame = 0;
-        break;
+
+        CircuitPlayground.setPixelColor(ledTracker, 255, 255, 255);
+        delay(ballSpeed);
+        CircuitPlayground.setPixelColor(ledTracker, 0, 0, 0);
+        delay(ballSpeed);
+
+        if(buttonFlag == 1){ // checking to see if bounced
+          if(roundCounter == 1){ // checks when button is pressed and adds point if bounced in the correct zone
+            if(ledTracker == 1 || ledTracker == 2 || ledTracker == 3 || ledTracker == 4){
+              totalPoints++;
+              Serial.print("Points: ");
+              Serial.println(totalPoints);
+            }
+          } else if(roundCounter == 2){
+            if(ledTracker == 2 || ledTracker == 3 || ledTracker == 4){
+              totalPoints++;
+              Serial.print("Points: ");
+              Serial.println(totalPoints);
+            }
+          } else if(roundCounter == 3){
+            if(ledTracker == 3 || ledTracker == 4){
+              totalPoints++;
+              Serial.print("Points: ");
+              Serial.println(totalPoints);
+            }
+          } else if(roundCounter == 4){
+            if(ledTracker == 4){
+              totalPoints++;
+              Serial.print("Points: ");
+              Serial.println(totalPoints);
+            }
+          }
+          ledTracker--;
+          switcher++;
+          buttonFlag = 0;
+          break;
+        }
+        if(ledTracker == 9){ // circles around
+          ledTracker = -1;
+        }
+        if(totalPoints == 13){ // checks for win
+          gameWin = 1;
+          continueGame = 0;
+          break;
+        }
+        if(ledTracker == 4){ // check for loss
+          gameLoss = 1;
+          continueGame = 0;
+          break;
+        }
       }
     } 
-  }
+    while(switcher % 2 != 0 && continueGame == 1){
+      for(ledTracker; ledTracker > -1; ledTracker--){ // iterates through, subtracting 1 from ledTracker
+        if(totalPoints < 4){
+          roundOne();
+        }else if(totalPoints > 3 && totalPoints < 6){
+          roundTwo();
+        }else if(totalPoints > 5 && totalPoints < 9){
+          roundThree();
+        }else if(totalPoints > 8 && totalPoints < 14){
+          finalRound();
+        }
 
-  if(gameLoss == 1){ // prints loss if led is not pressed in time
-    Serial.println("You lose.");
-    gameLoss = 0; // prevents infint printing
-  }
-  if(gameWin == 1){ // prints win if 13 points
-    Serial.println("You win!");
-    gameWin = 0; // prevents infint printing
+        CircuitPlayground.setPixelColor(ledTracker, 255, 255, 255);
+        delay(ballSpeed);
+        CircuitPlayground.setPixelColor(ledTracker, 0, 0, 0);
+        delay(ballSpeed);
+
+        if(buttonFlag == 1){ //check if bounced
+          if(roundCounter == 1){ // checks when button is pressed and adds point if bounced in the correct zone
+            if(ledTracker == 8 || ledTracker == 7 || ledTracker == 6 || ledTracker == 5){
+              totalPoints++;
+              Serial.print("Points: ");
+              Serial.println(totalPoints);
+            }
+          } else if(roundCounter == 2){
+            if(ledTracker == 7 || ledTracker == 6 || ledTracker == 5){
+              totalPoints++;
+              Serial.print("Points: ");
+              Serial.println(totalPoints);
+            }
+          } else if(roundCounter == 3){
+            if(ledTracker == 6 || ledTracker == 5){
+              totalPoints++;
+              Serial.print("Points: ");
+              Serial.println(totalPoints);
+            }
+          } else if(roundCounter == 4){
+            if(ledTracker == 5){
+              totalPoints++;
+              Serial.print("Points: ");
+              Serial.println(totalPoints);
+            }
+          }
+          ledTracker++;
+          switcher++;
+          buttonFlag = 0;
+          break;
+        }
+        if(ledTracker == 0){ // circles around
+          ledTracker = 10;
+        }
+        if(totalPoints == 13){ //checks for win
+          gameWin = 1;
+          continueGame = 0;
+          break;
+        }
+        if(ledTracker == 5){ // check for loss
+          gameLoss = 1;
+          continueGame = 0;
+          break;
+        }
+      } 
+    }
+
+    if(gameLoss == 1){ // prints loss if led is not pressed in time
+      Serial.println("You lose.");
+      startFlag = 0;
+      break;
+    }
+    if(gameWin == 1){ // prints win if 13 points
+      Serial.println("You win!");
+      startFlag = 0;
+      break;
+    }
   }
 }
 
 void ButtonBISR(){
   buttonFlag = 1;
+}
+
+void SwitchISR(){ // dertermins hard or easy mode
+  switchFlag = 1;
+}
+
+void StartISR(){ // will start the game
+  startFlag = 1;
 }
 
 void roundOne(){
