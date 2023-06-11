@@ -18,12 +18,16 @@ bool hardMode = 0;
 int ballSpeed = 0;
 bool playSparkle = 0;
 
+float midi[127];
+int A_four = 440;
+
 void setup() {
   CircuitPlayground.begin();
   Serial.begin(9600);
   attachInterrupt(digitalPinToInterrupt(buttonPlay), ButtonBISR, FALLING);
   attachInterrupt(digitalPinToInterrupt(buttonStart), StartISR, FALLING);
   attachInterrupt(digitalPinToInterrupt(switchPin), SwitchISR, CHANGE);
+  generateMIDI();
 }
 
 void loop() {
@@ -100,6 +104,7 @@ void loop() {
               Serial.println(totalPoints);
             }
           }
+          CircuitPlayground.playTone(midi[70], 50);
           ledTracker--;
           switcher++;
           buttonFlag = 0;
@@ -163,6 +168,7 @@ void loop() {
               Serial.println(totalPoints);
             }
           }
+          CircuitPlayground.playTone(midi[70], 50);
           ledTracker++;
           switcher++;
           buttonFlag = 0;
@@ -309,3 +315,12 @@ void victoryFlash(){ // plays upon victory
   }
 }
 
+// adapted from https://subsynth.sourceforge.net/midinote2freq.html
+void generateMIDI()
+{
+  for (int x = 0; x < 127; ++x)
+  {
+    midi[x] = (A_four / 32.0) * pow(2.0, ((x - 9.0) / 12.0));
+    Serial.println(midi[x]);
+  }
+}
