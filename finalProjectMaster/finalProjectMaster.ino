@@ -7,6 +7,8 @@ int switcher = 0;
 int ledTracker = 0;
 int totalPoints = 0;
 bool continueGame = 1;
+bool gameWin = 0;
+bool gameLoss = 0;
 int roundCounter = 0;
 
 void setup() {
@@ -79,7 +81,13 @@ void loop() {
       if(ledTracker == 9){ // circles around
         ledTracker = -1;
       }
+      if(totalPoints == 13){ // checks for win
+        gameWin = 1;
+        continueGame = 0;
+        break;
+      }
       if(ledTracker == 4){ // check for loss
+        gameLoss = 1;
         continueGame = 0;
         break;
       }
@@ -136,16 +144,26 @@ void loop() {
       if(ledTracker == 0){ // circles around
         ledTracker = 10;
       }
+      if(totalPoints == 13){ //checks for win
+        gameWin = 1;
+        continueGame = 0;
+        break;
+      }
       if(ledTracker == 5){ // check for loss
+        gameLoss = 1;
         continueGame = 0;
         break;
       }
     } 
   }
 
-  if(ledTracker == 4 || ledTracker == 5){ // prints loss if led is not pressed in time
-    Serial.println("You lose");
-    ledTracker = 0; // sets ledTracker to 0 to prevent infinit printing
+  if(gameLoss == 1){ // prints loss if led is not pressed in time
+    Serial.println("You lose.");
+    gameLoss = 0; // prevents infint printing
+  }
+  if(gameWin == 1){ // prints win if 13 points
+    Serial.println("You win!");
+    gameWin = 0; // prevents infint printing
   }
 }
 
