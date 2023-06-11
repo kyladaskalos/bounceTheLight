@@ -11,7 +11,7 @@ This will be a pong style game. The objective is to bounce the led light back an
 3. Hit button a when the moving led is in the green region, but before it reaches the end of the leds.
 4. Each bounce earns 1 point, so try to score as many points as possible.
 5. As points are earned, the green region decreases, so pay attention.
-6. To win the game, bounce the led 4 times once the green region is down to one on both sides, for a total of 13 points
+6. To win the game, bounce the led 4 times once the blue region is down to one on both sides, for a total of 13 points
 7. If the player fails to bounce the led in time, the game is over.
 
 ## Inputs and Outputs
