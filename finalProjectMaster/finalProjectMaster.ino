@@ -7,6 +7,7 @@ int switcher = 0;
 int ledTracker = 0;
 int totalPoints = 0;
 bool continueGame = 1;
+int roundCounter = 0;
 
 void setup() {
   CircuitPlayground.begin();
@@ -45,14 +46,40 @@ void loop() {
       delay(300);
 
       if(buttonFlag == 1){ // checking to see if bounced
+        if(roundCounter == 1){ // checks when button is pressed and adds point if bounced in the correct zone
+          if(ledTracker == 1 || ledTracker == 2 || ledTracker == 3 || ledTracker == 4){
+            totalPoints++;
+            Serial.print("Points: ");
+            Serial.println(totalPoints);
+          }
+        } else if(roundCounter == 2){
+          if(ledTracker == 2 || ledTracker == 3 || ledTracker == 4){
+            totalPoints++;
+            Serial.print("Points: ");
+            Serial.println(totalPoints);
+          }
+        } else if(roundCounter == 3){
+          if(ledTracker == 3 || ledTracker == 4){
+            totalPoints++;
+            Serial.print("Points: ");
+            Serial.println(totalPoints);
+          }
+        } else if(roundCounter == 4){
+          if(ledTracker == 4){
+            totalPoints++;
+            Serial.print("Points: ");
+            Serial.println(totalPoints);
+          }
+        }
         ledTracker--;
+        switcher++;
         buttonFlag = 0;
         break;
       }
       if(ledTracker == 9){ // circles around
         ledTracker = -1;
       }
-      if(ledTracker == 4){
+      if(ledTracker == 4){ // check for loss
         continueGame = 0;
         break;
       }
@@ -76,14 +103,40 @@ void loop() {
       delay(300);
 
       if(buttonFlag == 1){ //check if bounced
+        if(roundCounter == 1){ // checks when button is pressed and adds point if bounced in the correct zone
+          if(ledTracker == 8 || ledTracker == 7 || ledTracker == 6 || ledTracker == 5){
+            totalPoints++;
+            Serial.print("Points: ");
+            Serial.println(totalPoints);
+          }
+        } else if(roundCounter == 2){
+          if(ledTracker == 7 || ledTracker == 6 || ledTracker == 5){
+            totalPoints++;
+            Serial.print("Points: ");
+            Serial.println(totalPoints);
+          }
+        } else if(roundCounter == 3){
+          if(ledTracker == 6 || ledTracker == 5){
+            totalPoints++;
+            Serial.print("Points: ");
+            Serial.println(totalPoints);
+          }
+        } else if(roundCounter == 4){
+          if(ledTracker == 5){
+            totalPoints++;
+            Serial.print("Points: ");
+            Serial.println(totalPoints);
+          }
+        }
         ledTracker++;
+        switcher++;
         buttonFlag = 0;
         break;
       }
       if(ledTracker == 0){ // circles around
         ledTracker = 10;
       }
-      if(ledTracker == 5){
+      if(ledTracker == 5){ // check for loss
         continueGame = 0;
         break;
       }
@@ -98,39 +151,54 @@ void loop() {
 
 void ButtonBISR(){
   buttonFlag = 1;
-  switcher++;
 }
 
 void roundOne(){
+  CircuitPlayground.clearPixels();
+
   CircuitPlayground.setPixelColor(4, 0, 0, 255);
-  CircuitPlayground.setPixelColor(1, 0, 0, 255);
-  CircuitPlayground.setPixelColor(2, 0, 0, 255);
   CircuitPlayground.setPixelColor(3, 0, 0, 255);
+  CircuitPlayground.setPixelColor(2, 0, 0, 255);
+  CircuitPlayground.setPixelColor(1, 0, 0, 255);
   CircuitPlayground.setPixelColor(5, 0, 0, 255);
-  CircuitPlayground.setPixelColor(8, 0, 0, 255);
-  CircuitPlayground.setPixelColor(7, 0, 0, 255);
   CircuitPlayground.setPixelColor(6, 0, 0, 255);
+  CircuitPlayground.setPixelColor(7, 0, 0, 255);
+  CircuitPlayground.setPixelColor(8, 0, 0, 255);
+
+  roundCounter = 1;
 }
 
 void roundTwo(){
+  CircuitPlayground.clearPixels();
+
   CircuitPlayground.setPixelColor(4, 0, 0, 255);
-  CircuitPlayground.setPixelColor(1, 0, 0, 255);
+  CircuitPlayground.setPixelColor(3, 0, 0, 255);
   CircuitPlayground.setPixelColor(2, 0, 0, 255);
   CircuitPlayground.setPixelColor(5, 0, 0, 255);
-  CircuitPlayground.setPixelColor(8, 0, 0, 255);
+  CircuitPlayground.setPixelColor(6, 0, 0, 255);
   CircuitPlayground.setPixelColor(7, 0, 0, 255);
+
+  roundCounter = 2;
 }
 
 void roundThree(){
+  CircuitPlayground.clearPixels();
+
   CircuitPlayground.setPixelColor(4, 0, 0, 255);
-  CircuitPlayground.setPixelColor(1, 0, 0, 255);
+  CircuitPlayground.setPixelColor(3, 0, 0, 255);
   CircuitPlayground.setPixelColor(5, 0, 0, 255);
-  CircuitPlayground.setPixelColor(8, 0, 0, 255);
+  CircuitPlayground.setPixelColor(6, 0, 0, 255);
+
+  roundCounter = 3;
 }
 
 void finalRound(){
+  CircuitPlayground.clearPixels();
+
   CircuitPlayground.setPixelColor(4, 0, 0, 255);
   CircuitPlayground.setPixelColor(5, 0, 0, 255);
+
+  roundCounter = 4;
 }
 
 
