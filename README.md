@@ -8,7 +8,7 @@ This will be a pong style game. The objective is to bounce the led light back an
 
 1. Using the switch, choose whether to play in hard or easy mode. Do this before you start every time to make sure it's in the right mode.
 2. Press button a to start.
-3. Hit button a when the moving led is in the green region, but before it reaches the end of the leds.
+3. Hit button b when the moving led is in the green region, but before it reaches the end of the leds.
 4. Each bounce earns 1 point
 5. As points are earned, the green region decreases, so pay attention.
 6. To win the game, bounce the led 4 times once the blue region is down to one on both sides, for a total of 13 points
